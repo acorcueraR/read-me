@@ -1,2 +1,9 @@
 console.log('file')
-const label = "Label"
+const list = [
+  {
+    a: 1
+  },
+  {
+    a: 2,
+  }
+];
