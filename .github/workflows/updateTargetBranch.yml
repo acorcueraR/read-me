@@ -5,7 +5,7 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  update-target:
+  upToDate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
