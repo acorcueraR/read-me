@@ -1,24 +1,26 @@
 name: updateTargetBranch
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - main
+  pull_request_target:
+    types: [opened, reopened, synchronize]
 
 jobs:
   upToDate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to push to PR branches
+      contents: write
+      pull-requests: write
     steps:
-      - name: Auto-merge base branch into PR branch
+      - name: Checkout the PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge base branch into PR branch
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} repo
-          cd repo
-          git checkout ${{ github.head_ref }}
-          git fetch origin ${{ github.base_ref }}
-          git merge origin/${{ github.base_ref }} --no-edit || echo "No changes to merge"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge origin/${{ github.event.pull_request.base.ref }} --no-edit || echo "No changes"
           git push origin HEAD

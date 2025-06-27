@@ -7,3 +7,4 @@ const list = [
     a: 2,
   }
 ];
+const mapped = list.map(e => e.a)
